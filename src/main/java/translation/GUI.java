@@ -31,6 +31,7 @@ public class GUI {
 
             JPanel languagePanel = new JPanel();
 
+            //Creates the panel for selecting languages with a scrolled list.
             String[] items = converter.getLanguages().toArray(new String[0]);
             Arrays.sort(items);
             JList<String> languageList = new JList<>(items);
