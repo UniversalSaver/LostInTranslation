@@ -30,13 +30,14 @@ public class GUI {
             countryPanel.add(countryField);
 
             JPanel languagePanel = new JPanel();
-            JScrollPane languageScrollPane = new JScrollPane(languagePanel);
+
 
             String[] items = converter.getLanguages().toArray(new String[0]);
             JList<String> languageList = new JList<>(items);
 
+            JScrollPane languageScrollPane = new JScrollPane(languageList);
             languagePanel.add(new JLabel("Language:"));
-            languagePanel.add(languageList);
+            languagePanel.add(languageScrollPane);
 
             JPanel buttonPanel = new JPanel();
             JButton submit = new JButton("Submit");
@@ -72,7 +73,7 @@ public class GUI {
             JPanel mainPanel = new JPanel();
             mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
             mainPanel.add(countryPanel);
-            mainPanel.add(languageScrollPane);
+            mainPanel.add(languagePanel);
             mainPanel.add(buttonPanel);
 
             JFrame frame = new JFrame("Country Name Translator");
