@@ -1,7 +1,13 @@
 package translation;
 
+import examples.JSONTranslationExample;
+
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import java.awt.event.*;
+import java.util.Arrays;
+import java.util.List;
 
 
 // TODO Task D: Update the GUI for the program to align with UI shown in the README example.
@@ -12,6 +18,9 @@ import java.awt.event.*;
 public class GUI {
 
     public static void main(String[] args) {
+        JSONTranslator translator = new JSONTranslator();
+        LanguageCodeConverter converter = new LanguageCodeConverter();
+
         SwingUtilities.invokeLater(() -> {
             JPanel countryPanel = new JPanel();
             JTextField countryField = new JTextField(10);
@@ -21,9 +30,12 @@ public class GUI {
             countryPanel.add(countryField);
 
             JPanel languagePanel = new JPanel();
-            JTextField languageField = new JTextField(10);
+
+            String[] items = converter.getLanguages().toArray(new String[0]);
+            JList<String> languageList = new JList<>(items);
+
             languagePanel.add(new JLabel("Language:"));
-            languagePanel.add(languageField);
+            languagePanel.add(languageList);
 
             JPanel buttonPanel = new JPanel();
             JButton submit = new JButton("Submit");
@@ -39,14 +51,14 @@ public class GUI {
             submit.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    String language = languageField.getText();
+                    String languageCode = converter.fromLanguage(languageList.getSelectedValue());
                     String country = countryField.getText();
 
                     // for now, just using our simple translator, but
                     // we'll need to use the real JSON version later.
                     Translator translator = new CanadaTranslator();
 
-                    String result = translator.translate(country, language);
+                    String result = translator.translate(country, languageCode);
                     if (result == null) {
                         result = "no translation found!";
                     }
