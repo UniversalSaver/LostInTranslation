@@ -25,7 +25,7 @@ public class GUI {
             JPanel countryPanel = new JPanel();
             JTextField countryField = new JTextField(10);
             countryField.setText("can");
-            countryField.setEditable(false); // we only support the "can" country code for now
+            countryField.setEditable(true); // we only support the "can" country code for now
             countryPanel.add(new JLabel("Country:"));
             countryPanel.add(countryField);
 
@@ -33,6 +33,7 @@ public class GUI {
 
 
             String[] items = converter.getLanguages().toArray(new String[0]);
+            Arrays.sort(items);
             JList<String> languageList = new JList<>(items);
 
             JScrollPane languageScrollPane = new JScrollPane(languageList);
@@ -58,7 +59,6 @@ public class GUI {
 
                     // for now, just using our simple translator, but
                     // we'll need to use the real JSON version later.
-                    Translator translator = new CanadaTranslator();
 
                     String result = translator.translate(country, languageCode);
                     if (result == null) {
