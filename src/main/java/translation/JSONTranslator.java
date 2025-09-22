@@ -87,7 +87,7 @@ public class JSONTranslator implements Translator {
 
     @Override
     public String translate(String countryCode, String languageCode) {
-        return translations.getOrDefault(languageCode + "-" + countryCode,
+        return translations.getOrDefault(countryCode + "-" + languageCode,
                 "No value found for this translation ");
     }
 
