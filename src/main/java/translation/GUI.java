@@ -31,10 +31,10 @@ public class GUI {
 
             JPanel languagePanel = new JPanel();
 
-
             String[] items = converter.getLanguages().toArray(new String[0]);
             Arrays.sort(items);
             JList<String> languageList = new JList<>(items);
+            languageList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
             JScrollPane languageScrollPane = new JScrollPane(languageList);
             languagePanel.add(new JLabel("Language:"));
