@@ -1,7 +1,13 @@
 package translation;
 
+import examples.JSONTranslationExample;
+
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import java.awt.event.*;
+import java.util.Arrays;
+import java.util.List;
 
 
 // TODO Task D: Update the GUI for the program to align with UI shown in the README example.
@@ -12,18 +18,33 @@ import java.awt.event.*;
 public class GUI {
 
     public static void main(String[] args) {
+        CountryCodeConverter countryConverter = new CountryCodeConverter();
+        LanguageCodeConverter converter = new LanguageCodeConverter();
+
         SwingUtilities.invokeLater(() -> {
             JPanel countryPanel = new JPanel();
             JTextField countryField = new JTextField(10);
             countryField.setText("can");
-            countryField.setEditable(false); // we only support the "can" country code for now
+            countryField.setEditable(true); // we only support the "can" country code for now
             countryPanel.add(new JLabel("Country:"));
-            countryPanel.add(countryField);
+
+
+            String[] countries = countryConverter.getCountries().toArray(new String[0]);
+            Arrays.sort(countries);
+            JComboBox<String> countryComboBox = new JComboBox<>(countries);
+            countryPanel.add(countryComboBox);
 
             JPanel languagePanel = new JPanel();
-            JTextField languageField = new JTextField(10);
+
+            //Creates the panel for selecting languages with a scrolled list.
+            String[] items = converter.getLanguages().toArray(new String[0]);
+            Arrays.sort(items);
+            JList<String> languageList = new JList<>(items);
+            languageList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+            JScrollPane languageScrollPane = new JScrollPane(languageList);
             languagePanel.add(new JLabel("Language:"));
-            languagePanel.add(languageField);
+            languagePanel.add(languageScrollPane);
 
             JPanel buttonPanel = new JPanel();
             JButton submit = new JButton("Submit");
@@ -39,14 +60,18 @@ public class GUI {
             submit.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    String language = languageField.getText();
-                    String country = countryField.getText();
+                    String countryCode = countryConverter.fromCountry(countryComboBox.getSelectedItem().toString());
 
                     // for now, just using our simple translator, but
                     // we'll need to use the real JSON version later.
-                    Translator translator = new CanadaTranslator();
+                    Translator translator = new JSONTranslator();
+                    String languageCode = converter.fromLanguage(languageList.getSelectedValue());
 
-                    String result = translator.translate(country, language);
+
+                    // for now, just using our simple translator, but
+                    // we'll need to use the real JSON version later.
+
+                    String result = translator.translate(countryCode, languageCode);
                     if (result == null) {
                         result = "no translation found!";
                     }
