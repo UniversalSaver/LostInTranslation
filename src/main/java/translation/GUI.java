@@ -2,6 +2,7 @@ package translation;
 
 import javax.swing.*;
 import java.awt.event.*;
+import java.util.Arrays;
 
 
 // TODO Task D: Update the GUI for the program to align with UI shown in the README example.
@@ -12,13 +13,17 @@ import java.awt.event.*;
 public class GUI {
 
     public static void main(String[] args) {
+        CountryCodeConverter countryConverter = new CountryCodeConverter();
+
         SwingUtilities.invokeLater(() -> {
             JPanel countryPanel = new JPanel();
-            JTextField countryField = new JTextField(10);
-            countryField.setText("can");
-            countryField.setEditable(false); // we only support the "can" country code for now
             countryPanel.add(new JLabel("Country:"));
-            countryPanel.add(countryField);
+
+
+            String[] countries = countryConverter.getCountries().toArray(new String[0]);
+            Arrays.sort(countries);
+            JComboBox<String> countryComboBox = new JComboBox<>(countries);
+            countryPanel.add(countryComboBox);
 
             JPanel languagePanel = new JPanel();
             JTextField languageField = new JTextField(10);
@@ -40,11 +45,11 @@ public class GUI {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     String language = languageField.getText();
-                    String country = countryField.getText();
+                    String country = countryConverter.fromCountry(countryComboBox.getSelectedItem().toString());
 
                     // for now, just using our simple translator, but
                     // we'll need to use the real JSON version later.
-                    Translator translator = new CanadaTranslator();
+                    Translator translator = new JSONTranslator();
 
                     String result = translator.translate(country, language);
                     if (result == null) {
