@@ -22,23 +22,28 @@ public class GUI {
             countryField.setEditable(true); // we only support the "can" country code for now
             countryPanel.add(new JLabel("Country:"));
 
-
+            String[] languages = converter.getLanguages().toArray(new String[0]);
+            Arrays.sort(languages);
             String[] countries = countryConverter.getCountries().toArray(new String[0]);
             Arrays.sort(countries);
-            JComboBox<String> countryComboBox = new JComboBox<>(countries);
-            countryPanel.add(countryComboBox);
 
             JPanel languagePanel = new JPanel();
 
             //Creates the panel for selecting languages with a scrolled list.
-            String[] items = converter.getLanguages().toArray(new String[0]);
-            Arrays.sort(items);
-            JList<String> languageList = new JList<>(items);
-            languageList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
-            JScrollPane languageScrollPane = new JScrollPane(languageList);
+
+
             languagePanel.add(new JLabel("Language:"));
-            languagePanel.add(languageScrollPane);
+
+
+            JComboBox<String> languageComboBox = new JComboBox<>(languages);
+            languagePanel.add(languageComboBox);
+
+            JList<String> countryList = new JList<>(languages);
+            countryList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+            JScrollPane countryScrollPane = new JScrollPane(countryList);
+            countryPanel.add(countryScrollPane);
+
 
             JPanel buttonPanel = new JPanel();
             JButton submit = new JButton("Submit");
@@ -54,12 +59,12 @@ public class GUI {
             submit.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    String countryCode = countryConverter.fromCountry(countryComboBox.getSelectedItem().toString());
+                    String languageCode = converter.fromLanguage(languageComboBox.getSelectedItem().toString());
 
                     // for now, just using our simple translator, but
                     // we'll need to use the real JSON version later.
                     Translator translator = new JSONTranslator();
-                    String languageCode = converter.fromLanguage(languageList.getSelectedValue());
+                    String countryCode = countryConverter.fromCountry(countryList.getSelectedValue());
 
 
                     // for now, just using our simple translator, but
@@ -77,9 +82,10 @@ public class GUI {
 
             JPanel mainPanel = new JPanel();
             mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
-            mainPanel.add(countryPanel);
+
             mainPanel.add(languagePanel);
             mainPanel.add(buttonPanel);
+            mainPanel.add(countryPanel);
 
             JFrame frame = new JFrame("Country Name Translator");
             frame.setContentPane(mainPanel);
