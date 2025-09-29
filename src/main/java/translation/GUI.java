@@ -39,15 +39,15 @@ public class GUI {
             JComboBox<String> languageComboBox = new JComboBox<>(languages);
             languagePanel.add(languageComboBox);
 
-            JList<String> countryList = new JList<>(languages);
+            JList<String> countryList = new JList<>(countries);
             countryList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
             JScrollPane countryScrollPane = new JScrollPane(countryList);
             countryPanel.add(countryScrollPane);
 
 
             JPanel buttonPanel = new JPanel();
-            JButton submit = new JButton("Submit");
-            buttonPanel.add(submit);
+            //JButton submit = new JButton("Submit");
+            //buttonPanel.add(submit);
 
             JLabel resultLabelText = new JLabel("Translation:");
             buttonPanel.add(resultLabelText);
@@ -56,9 +56,32 @@ public class GUI {
 
 
             // adding listener for when the user clicks the submit button
-            submit.addActionListener(new ActionListener() {
+            countryList.addListSelectionListener(new ListSelectionListener() {
                 @Override
-                public void actionPerformed(ActionEvent e) {
+                public void valueChanged(ListSelectionEvent e) {
+                    String languageCode = converter.fromLanguage(languageComboBox.getSelectedItem().toString());
+
+                    // for now, just using our simple translator, but
+                    // we'll need to use the real JSON version later.
+                    Translator translator = new JSONTranslator();
+                    String countryCode = countryConverter.fromCountry(countryList.getSelectedValue());
+
+
+                    // for now, just using our simple translator, but
+                    // we'll need to use the real JSON version later.
+
+                    String result = translator.translate(countryCode, languageCode);
+                    if (result == null) {
+                        result = "no translation found!";
+                    }
+                    resultLabel.setText(result);
+
+                }
+
+            });
+            languageComboBox.addItemListener(new ItemListener() {
+                @Override
+                public void itemStateChanged(ItemEvent e) {
                     String languageCode = converter.fromLanguage(languageComboBox.getSelectedItem().toString());
 
                     // for now, just using our simple translator, but
